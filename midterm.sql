@@ -1,29 +1,31 @@
+-- Tables
+
+
 CREATE TABLE Movies (
     id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
     release_year INT NOT NULL,
     genre VARCHAR(100) NOT NULL,
-    director VARCHAR(255) NOT NULL
+    director VARCHAR(100) NOT NULL
 );
+
 
 CREATE TABLE Customers (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    first_name VARCHAR(100) NOT NULL,
-    last_name VARCHAR(100) NOT NULL,
+    first_name VARCHAR(255) NOT NULL,
+    last_name VARCHAR(255) NOT NULL,
     email VARCHAR(255) UNIQUE NOT NULL,
     phone TEXT NOT NULL
 );
 
-CREATE TABLE Rentals (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    customer_id INT,
-    movie_id INT,
-    rental_date DATE NOT NULL,
-    return_date DATE,
-    FOREIGN KEY (customer_id) REFERENCES Customers(id),
-    FOREIGN KEY (movie_id) REFERENCES Movies(id)
-);
 
+CREATE TABLE Rentals (
+    id SERIAL PRIMARY KEY,
+    customer_id INT REFERENCES Customers(id) ON DELETE CASCADE,
+    movie_id INT REFERENCES Movies(id) ON DELETE CASCADE,
+    rental_date DATE NOT NULL,
+    return_date DATE
+);
 
 
 -- Inserting Movies
@@ -55,34 +57,10 @@ INSERT INTO Rentals (customer_id, movie_id, rental_date, return_date) VALUES
 (4, 5, '2024-10-23', NULL),
 (5, 1, '2024-10-24', '2024-10-31');
 
---  Queries 
-SELECT M.title, R.rental_date, R.return_date
-FROM Rentals R
-JOIN Customers C ON R.customer_id = C.id
-JOIN Movies M ON R.movie_id = M.id
-WHERE C.email = 'emily.davis@example.com';
+-- Queries
 
-SELECT C.first_name, C.last_name, R.rental_date
-FROM Rentals R
-JOIN Movies M ON R.movie_id = M.id
-JOIN Customers C ON R.customer_id = C.id
-WHERE M.title = 'Interstellar';
-
-SELECT C.first_name, C.last_name, R.rental_date, R.return_date
-FROM Rentals R
-JOIN Movies M ON R.movie_id = M.id
-JOIN Customers C ON R.customer_id = C.id
-WHERE M.title = 'The Matrix';
-
-SELECT C.first_name, C.last_name, R.rental_date, M.title
-FROM Rentals R
-JOIN Movies M ON R.movie_id = M.id
-JOIN Customers C ON R.customer_id = C.id
-WHERE M.director = 'Christopher Nolan';
-
-
-SELECT M.title, C.first_name, C.last_name, R.rental_date
-FROM Rentals R
-JOIN Movies M ON R.movie_id = M.id
-JOIN Customers C ON R.customer_id = C.id
-WHERE R.return_date IS NULL;
+SELECT m.title
+FROM Movies m
+JOIN Rentals r ON m.movie_id = r.movie_id
+JOIN Customers c ON r.customer_id = c.customer_id
+WHERE c.email = 'emily.davis@example.com';
