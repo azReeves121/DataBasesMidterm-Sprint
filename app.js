@@ -56,3 +56,51 @@ function createTables() {
     console.log("Rentals table created or already exists.");
   });
 }
+
+function printMovies() {
+  connection.query("SELECT * FROM Movies;", (err, results) => {
+    if (err) throw err;
+    console.table(results);
+  });
+}
+
+function updateCustomerEmail(customerId, newEmail) {
+  connection.query(
+    "UPDATE Customers SET email = ? WHERE id = ?",
+    [newEmail, customerId],
+    (err, results) => {
+      if (err) throw err;
+      console.log(`Customer ${customerId} email updated to ${newEmail}.`);
+    }
+  );
+}
+
+function insertMovie(title, year, genre, director) {
+  connection.query(
+    "INSERT INTO Movies (title, release_year, genre, director) VALUES (?, ?, ?, ?)",
+    [title, year, genre, director],
+    (err, results) => {
+      if (err) throw err;
+      console.log(`Movie ${title} added to the database.`);
+    }
+  );
+}
+
+function removeCustomer(customerId) {
+  connection.query(
+    "DELETE FROM Rentals WHERE customer_id = ?",
+    [customerId],
+    (err, results) => {
+      if (err) throw err;
+      console.log(`Removed rental history for customer ${customerId}.`);
+    }
+  );
+  connection.query(
+    "DELETE FROM Customers WHERE id = ?",
+    [customerId],
+    (err, results) => {
+      if (err) throw err;
+      console.log(`Customer ${customerId} removed from the database.`);
+    }
+  );
+}
