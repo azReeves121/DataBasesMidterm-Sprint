@@ -104,3 +104,29 @@ function removeCustomer(customerId) {
     }
   );
 }
+program
+  .command("create-tables")
+  .description("Create all required tables")
+  .action(createTables);
+
+program
+  .command("print-movies")
+  .description("Print all movies in the system")
+  .action(printMovies);
+
+program
+  .command("update-email <customerId> <newEmail>")
+  .description("Update a customer’s email address")
+  .action(updateCustomerEmail);
+
+program
+  .command("insert-movie <title> <year> <genre> <director>")
+  .description("Insert a new movie to the database")
+  .action(insertMovie);
+
+program
+  .command("remove-customer <customerId>")
+  .description("Remove a customer from the database")
+  .action(removeCustomer);
+
+program.parse(process.argv);
